@@ -1,0 +1,26 @@
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  darkMode: '',
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}",
+    "./node_modules/react-tailwindcss-datepicker/dist/index.esm.js",
+  ],
+  theme: {
+    extend: {
+      fontFamily: {
+        'new-font': ['Open Sans', 'sans-serif'],
+        'new-2-font': ['Satisfy' , 'cursive'],
+        'lato': ['Lato', 'sans-serif'],
+        'Roboto': ['Roboto Serif' , 'serif'],
+        'Freehand': ['Freehand' , 'cursive'],
+        'Poppins': ['Poppins' , 'sans-serif'],
+        'Abril': ['Abril Fatface' , 'cursive'],
+        'Rouge': ['Rouge Script','cursive'],
+      },
+      colors:{
+        'ser-color': '#ffe4b0',
+      },
+    },
+  },
+  plugins: [],
+}
