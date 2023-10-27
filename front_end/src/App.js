@@ -12,6 +12,7 @@ import BookingDate from './components/Booking/BookingDate';
 import BookingServices from './components/Booking/BookingServices';
 import Login from './components/Admin/Login';
 import View from './components/Admin/View';
+import CheckPoint from './components/Admin/client/Check-point';
 import Index from './components/Admin/Index';
 import {Route , Routes , Navigate,  useLocation} from 'react-router-dom';
 import React from 'react';
@@ -48,6 +49,7 @@ function App() {
             <Route index element = {<Navigate to ="Login" />} />
             <Route path = 'Login' element = {<Login setToken = {setToken} />}/>
             <Route path = 'View' element = {<View token={token} removeToken={removeToken} setToken={setToken}/>} />
+            <Route path = 'Checking-point' element = {<CheckPoint token={token} removeToken={removeToken} setToken={setToken}/>} />
         </Route>
       </Routes>
     }
