@@ -216,5 +216,29 @@ def delete_data(id):
     return jsonify({
         'message': 'Successful Delete'
     })
+    
+@app.route('/api/posts/<int:page>/<int:per_page>', methods=['GET'])
+def posts(page=1, per_page=10):
+ 
+    total = Booking.query.count()
+    print(total)
+ 
+    posts = Booking.query.order_by(Booking.date)  
+    posts = posts.paginate(page=page, per_page=per_page)
+ 
+    return jsonify({
+        'total': total,
+        'page': page,
+        'per_page': per_page,
+        'has_next': posts.has_next,
+        'has_prev': posts.has_prev,
+        'page_list': [iter_page if iter_page else '...' for iter_page in posts.iter_pages()],
+        'posts': [{
+            'id': p.id,
+            'title': p.name,
+            'phone': p.phone
+        } for p in posts.items]
+    })
+
 if __name__ == '__main__':
-    app.run(port=8080)
+    app.run(debug = True, host = '0.0.0.0', port=8080)
