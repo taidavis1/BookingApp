@@ -21,7 +21,7 @@ export default function BookingDate(){
     const [PageId , SetPageId] = pageid;
     const generatetime = async (day , date) => {
         try{
-            const resp = await axios.get(`${process.env.REACT_APP_API_URL}/generatehours/${day}/${date}`);
+            const resp = await axios.get(`${process.env.REACT_APP_API_URL_LOCAL}/generatehours/${day}/${date}`);
             if (day === 'Sun'){
                 setHoursSun(resp.data.hours);
             }

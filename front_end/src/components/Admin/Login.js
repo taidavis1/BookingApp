@@ -13,7 +13,7 @@ export default function Login(props){
     }, []);
     function AdminLogin(e){
         e.preventDefault();
-        axios.post(`${process.env.REACT_APP_API_URL}/login` ,{
+        axios.post(`${process.env.REACT_APP_API_URL_LOCAL}/login` ,{
             username: username,
             password: pass,
         })

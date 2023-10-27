@@ -25,7 +25,7 @@ export default function Booking(){
     const [IsTechClick , setIsTechClick] = useState(false);
     const sendInfo = (e) => {
         e.preventDefault();
-        axios.post(`${process.env.REACT_APP_API_URL}/book` , {
+        axios.post(`${process.env.REACT_APP_API_URL_LOCAL}/book` , {
             name: Name,
             phone: Phone,
             service: ServiceVal,

@@ -82,6 +82,9 @@ def refresh_expiring_jwts(response):
     except (RuntimeError, KeyError):
         return response
 
+@app.route("/", methods = ['GET'])
+def health():
+    return jsonify({'message' : 'hello'})
 
 @app.route("/api/book" , methods = ['POST'])
 def booking():

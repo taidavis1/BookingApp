@@ -9,7 +9,7 @@ export default function View(props) {
         generateData();
     }, []); 
     const generateData = () => {
-        axios.get(`${process.env.REACT_APP_API_URL}/view`, {
+        axios.get(`${process.env.REACT_APP_API_URL_LOCAL}/view`, {
             withCredentials: true,
             headers: {
                 "Content-Type": 'application/json',
@@ -27,7 +27,7 @@ export default function View(props) {
     };
 
     const Logout = () => {
-        axios.post(`${process.env.REACT_APP_API_URL}/logout`, {}, {
+        axios.post(`${process.env.REACT_APP_API_URL_LOCAL}/logout`, {}, {
             withCredentials: true,
             headers: {
                 "Content-Type": 'application/json',
@@ -47,7 +47,7 @@ export default function View(props) {
     const DeleteBtn = (id) => {
         const isConfirmed = window.confirm('Are you sure you want to delete this item?');
         if (isConfirmed) {
-            axios.delete(`${process.env.REACT_APP_API_URL}/delete/${id}`, { // Updated method to delete
+            axios.delete(`${process.env.REACT_APP_API_URL_LOCAL}/delete/${id}`, { // Updated method to delete
                 withCredentials: true,
                 headers: {
                     "Content-Type": 'application/json',

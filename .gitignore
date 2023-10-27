@@ -1,3 +1,5 @@
 link.txt
 thuy-keys.pem
 /front_end/node_modules
+*/venv/
+/Backend/venv
