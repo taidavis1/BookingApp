@@ -49,7 +49,7 @@ function App() {
             <Route index element = {<Navigate to ="Login" />} />
             <Route path = 'Login' element = {<Login setToken = {setToken} />}/>
             <Route path = 'View' element = {<View token={token} removeToken={removeToken} setToken={setToken}/>} />
-            <Route path = 'Checking-point' element = {<CheckPoint token={token} removeToken={removeToken} setToken={setToken}/>} />
+            <Route path = 'Client' element = {<CheckPoint token={token} removeToken={removeToken} setToken={setToken}/>} />
         </Route>
       </Routes>
     }

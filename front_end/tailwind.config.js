@@ -16,9 +16,11 @@ module.exports = {
         'Poppins': ['Poppins' , 'sans-serif'],
         'Abril': ['Abril Fatface' , 'cursive'],
         'Rouge': ['Rouge Script','cursive'],
+        'Dancing': ['Dancing Script', 'cursive'],
       },
       colors:{
         'ser-color': '#ffe4b0',
+        'gold': '#ffd700',
       },
     },
   },

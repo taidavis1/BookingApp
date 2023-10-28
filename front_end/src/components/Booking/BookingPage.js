@@ -21,6 +21,8 @@ export default function Booking(){
     const [BGColor , setBGColor] = useState({});
     const [Phone , setPhone] = useState('');
     const [Name , setName] = useState('');
+    const [dob , setDob] = useState('');
+    const [isChecked, setIsChecked] = useState(false);
     const [TechName, setTechName] = useState('');
     const [IsTechClick , setIsTechClick] = useState(false);
     const sendInfo = (e) => {
@@ -32,6 +34,7 @@ export default function Booking(){
             date: DateVal,
             time: isTime,
             technician: TechName,
+            dob: dob,
         }).then(function (resp) {
             alert(resp.data.messages);
             window.location.href = "/";
@@ -45,7 +48,7 @@ export default function Booking(){
         <ServiceContext.Provider value = {{service: [ServiceVal , SetServiceVal] , click: [IsClick , setIsClick] , pageid: [PageId , SetPageId] , clicksub: [IsSubClick , setIsSubClick]}}>
             <DateContext.Provider value={{pageid: [PageId , SetPageId] , date: [DateVal , SetDateVal] , original: [orginalVal , setoriginalVal] , days: [day , Setday] , select: [isSelect , SetisSelect] , time: [isTime , SetTime] , color: [BGColor , setBGColor]}}>
                 <TechContext.Provider value={{days: [day , Setday] , tech:[TechName, setTechName] , pageid:[PageId , SetPageId] , techclick:[IsTechClick , setIsTechClick]}}>
-                        <InfoContext.Provider value={{ pageid:[PageId , SetPageId] , phone: [Phone , setPhone] , name: [Name , setName]}}>
+                        <InfoContext.Provider value={{ pageid:[PageId , SetPageId] ,original: [orginalVal , setoriginalVal] ,  phone: [Phone , setPhone] , name: [Name , setName] , birthday: [dob , setDob] , check: [isChecked , setIsChecked]}}>
                             <section className="space-y-6 lg:space-y-12">
                                 <div className=" bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% pt-56 md:pb-40 relative">
                                     <div className="test1 border-b-2 tracking-wide border-b-yellow-400 cursor-pointer text-white md:text-4xl italic uppercase font-Roboto font-semibold">
@@ -146,6 +149,7 @@ export default function Booking(){
                                                                     <div>Info:</div>
                                                                     <span className="font-bold">{Name}</span>
                                                                     <span className="font-bold">{Phone}</span>
+                                                                    <span className="font-bold">{dob}</span>
                                                                 </div>
                                                         </div>
                                                     </div>

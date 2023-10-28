@@ -1,5 +1,4 @@
 from flask import Flask , request , jsonify
-import json
 import datetime
 import os
 from flask_sqlalchemy import SQLAlchemy
@@ -7,6 +6,7 @@ from flask_mail import Mail , Message
 from flask_jwt_extended import create_access_token , JWTManager, jwt_required, set_access_cookies, get_jwt, get_jwt_identity, unset_jwt_cookies
 from datetime import timedelta, timezone
 import pymysql
+import json
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -24,15 +24,14 @@ app.config['MAIL_PASSWORD'] = 'ppbkjcmhsviugxun'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 
-CORS(app , supports_credentials=True , origins=["https://luxurynailwestsac.com"])
+CORS(app , supports_credentials=True)
 admin = {
     'username':'thuy123',
     'password':'123'
 }
+
 mail = Mail(app)
 jwt = JWTManager(app)
-
-################################### Create Model ###################################
 db = SQLAlchemy(app)
 
 class Booking(db.Model):
@@ -62,8 +61,19 @@ class Booking(db.Model):
             'service_list': self.get_list(),  # Or directly: json.loads(self.service_list)
             'technician': self.technician
         }
-
-with app.app_context():         #Create Table
+class Client(db.Model):
+    id = db.Column(db.Integer , primary_key = True)
+    custname = db.Column(db.String(200) , nullable = False)
+    custphone = db.Column(db.String(200) , nullable = False)
+    custdob = db.Column(db.String(200) , nullable = False)
+    point = db.Column(db.Integer)
+    def __init__(self, custname, custphone , custdob , point):
+        self.custname = custname
+        self.custphone = custphone
+        self.custdob = custdob
+        self.point = point
+        
+with app.app_context():   
     db.create_all()
 
 @app.after_request
@@ -95,62 +105,72 @@ def booking():
     time = data.get('time')
     date = data.get('date')
     technician = data.get('technician')
+    dob = data.get('dob')
     print(data.get('name'))
+    
     booking = Booking(name , phone , date, time , slist , technician)
+    client_exists = Client.query.filter_by(custphone = phone).first()
+    if client_exists:
+        client_exists.point += 1
+    else:
+        if dob != "":
+            client = Client(custname=name, custphone=phone, custdob=dob, point=1)
+            db.session.add(client)
+    
     db.session.add(booking)
     db.session.commit()
     
     ############# Send Email ##################
-    recipients = ['nguyenthuyan1706@gmail.com']
-    subject = 'Hi there'
-    html_body = """
-<html>
-    <head>
-        <style>
-            body {{
-                font-family: Arial, sans-serif;
-                background-color: #f5f5f5;
-            }}
-            .email-container {{
-                max-width: 600px;
-                margin: 0 auto;
-                padding: 20px;
-                background-color: #ffffff;
-                border-radius: 10px;
-                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            }}
-            .header {{
-                text-align: center;
-                margin-bottom: 20px;
-            }}
-        </style>
-    </head>
-    <body>
-        <div class="email-container">
-            <div class="header">
-                <h1>Appointments Booking</h1>
-            </div>
-            <p>Hi There!, Here Your Appointment Details</p>
-            <p>Name of Client: {name}</p>
-            <p>Phone of Client: {phone}</p>
-            <p>Services He/She Want: {services}</p>
-            <p>Date of Appointment: {date}</p>
-            <p>Time of Appointment: {time}</p>
-            <p>Date of Appointment: {date}</p>
-            <p>Name of Techinician: {technician}</p>
-            <p>Thank you so much !</p>
-        </div>
-    </body>
-</html>
-""".format(name=name, phone=phone, services=', '.join(slist), date=date, time=time , technician = technician)
+#     recipients = ['nguyenthuyan1706@gmail.com']
+#     subject = 'Hi there'
+#     html_body = """
+# <html>
+#     <head>
+#         <style>
+#             body {{
+#                 font-family: Arial, sans-serif;
+#                 background-color: #f5f5f5;
+#             }}
+#             .email-container {{
+#                 max-width: 600px;
+#                 margin: 0 auto;
+#                 padding: 20px;
+#                 background-color: #ffffff;
+#                 border-radius: 10px;
+#                 box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+#             }}
+#             .header {{
+#                 text-align: center;
+#                 margin-bottom: 20px;
+#             }}
+#         </style>
+#     </head>
+#     <body>
+#         <div class="email-container">
+#             <div class="header">
+#                 <h1>Appointments Booking</h1>
+#             </div>
+#             <p>Hi There!, Here Your Appointment Details</p>
+#             <p>Name of Client: {name}</p>
+#             <p>Phone of Client: {phone}</p>
+#             <p>Services He/She Want: {services}</p>
+#             <p>Date of Appointment: {date}</p>
+#             <p>Time of Appointment: {time}</p>
+#             <p>Date of Appointment: {date}</p>
+#             <p>Name of Techinician: {technician}</p>
+#             <p>Thank you so much !</p>
+#         </div>
+#     </body>
+# </html>
+# """.format(name=name, phone=phone, services=', '.join(slist), date=date, time=time , technician = technician)
 
-    message = Message(subject, recipients=recipients , sender='phamtai1216@gmail.com')
-    message.html = html_body
+#     message = Message(subject, recipients=recipients , sender='phamtai1216@gmail.com')
+#     message.html = html_body
 
-    mail.send(message)    
+#     mail.send(message)    
     return jsonify({
         "messages": "Thank You For Your Appointment! We will be in touch soon",
-    })
+    }), 201
 
 @app.route('/api/generatehours/<days>/<date>')
 def generatehours(days , date):
@@ -219,13 +239,10 @@ def delete_data(id):
     
 @app.route('/api/posts/<int:page>/<int:per_page>', methods=['GET'])
 def posts(page=1, per_page=10):
- 
-    total = Booking.query.count()
+    total = Client.query.count()
     print(total)
- 
-    posts = Booking.query.order_by(Booking.date)  
+    posts = Client.query.order_by(Client.name)  
     posts = posts.paginate(page=page, per_page=per_page)
- 
     return jsonify({
         'total': total,
         'page': page,
@@ -236,7 +253,8 @@ def posts(page=1, per_page=10):
         'posts': [{
             'id': p.id,
             'title': p.name,
-            'phone': p.phone
+            'phone': p.phone,
+            'dob':p.dob,
         } for p in posts.items]
     })
 

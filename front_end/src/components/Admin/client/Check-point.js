@@ -14,7 +14,7 @@ export default function CheckPoint(props) {
 
     const [pageCount, setpageCount] = useState(0);
 
-    let limit = 1;
+    let limit = 10;
 
     useEffect(() => {
         const getPost = async () => {
@@ -84,6 +84,7 @@ export default function CheckPoint(props) {
                         <th className="border-2 border-black">ID</th>
                         <th className="border-2 border-black">Client</th>
                         <th className="border-2 border-black">Phone</th>
+                        <th className="border-2 border-black">Date of Birth</th>
                     </tr>
                 </thead>
                 <tbody className="border-2 border-black">
@@ -91,6 +92,7 @@ export default function CheckPoint(props) {
                         <td className="border-2 border-black text-center" key={row.id}>{row.id}</td>
                         <td className="border-2 border-black text-center" key={row.title}>{row.title}</td>
                         <td className="border-2 border-black text-center" key={row.phone}>{row.phone}</td>
+                        <td className="border-2 border-black text-center" key={row.dob}>{row.dob}</td>
                     </tr>)}
                 </tbody>
             </table>
