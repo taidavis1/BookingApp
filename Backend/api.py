@@ -258,5 +258,21 @@ def posts(page=1, per_page=10):
         } for p in posts.items]
     })
 
+@app.route("/api/checking" , methods = ['POST'])
+def checking():
+    data = request.get_json()
+    # name = data.get('name')
+    phone = data.get('phone')
+    print(phone)
+    # CheckCustomer = Booking.query.filter_by(phone = phone).first()
+    if phone:
+        return jsonify({
+            'messages': 'Check in Successful'
+        })
+    else:
+        return jsonify({
+            'messages': 'Information Does Not Match Our Records'
+        })
+        
 if __name__ == '__main__':
     app.run(debug = True, host = '0.0.0.0', port=8080)
