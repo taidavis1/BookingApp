@@ -61,6 +61,7 @@ class Booking(db.Model):
             'service_list': self.get_list(),  # Or directly: json.loads(self.service_list)
             'technician': self.technician
         }
+
 class Client(db.Model):
     id = db.Column(db.Integer , primary_key = True)
     custname = db.Column(db.String(200) , nullable = False)
@@ -73,9 +74,18 @@ class Client(db.Model):
         self.custdob = custdob
         self.point = point
         
+class CheckIn(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    customer_phone = db.Column(db.String(200) , nullable = False)
+    check_in_time = db.Column(db.DateTime, default=datetime.utcnow)
+    check_in_point = db.Column(db.Integer)
+    def __init__(self, customer_phone , check_in_point):
+        self.customer_phone = customer_phone
+        self.check_in_point = check_in_point
+
 with app.app_context():   
     db.create_all()
-
+    
 @app.after_request
 def refresh_expiring_jwts(response):
     try:
@@ -238,10 +248,11 @@ def delete_data(id):
     })
     
 @app.route('/api/posts/<int:page>/<int:per_page>', methods=['GET'])
+@jwt_required(locations=['headers'])
 def posts(page=1, per_page=10):
     total = Client.query.count()
     print(total)
-    posts = Client.query.order_by(Client.name)  
+    posts = Client.query.order_by(Client.custname)  
     posts = posts.paginate(page=page, per_page=per_page)
     return jsonify({
         'total': total,
@@ -252,9 +263,10 @@ def posts(page=1, per_page=10):
         'page_list': [iter_page if iter_page else '...' for iter_page in posts.iter_pages()],
         'posts': [{
             'id': p.id,
-            'title': p.name,
-            'phone': p.phone,
-            'dob':p.dob,
+            'title': p.custname,
+            'phone': p.custphone,
+            'dob':p.custdob,
+            'point': p.point,
         } for p in posts.items]
     })
 
@@ -263,12 +275,17 @@ def checking():
     data = request.get_json()
     # name = data.get('name')
     phone = data.get('phone')
-    print(phone)
-    # CheckCustomer = Booking.query.filter_by(phone = phone).first()
-    if phone:
+    customer = db.session.query(Client).join(Booking, Booking.phone == Client.custphone).filter(Booking.phone == phone).first()
+    if customer:
+        
+        checkin = CheckIn(customer_phone = phone , check_in_point = customer.points)
+        db.session.add(checkin)
+        db.session.commit()
+        
         return jsonify({
-            'messages': 'Check in Successful'
+            'messages': 'Check in Successful',
         })
+        
     else:
         return jsonify({
             'messages': 'Information Does Not Match Our Records'

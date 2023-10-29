@@ -19,7 +19,14 @@ export default function CheckPoint(props) {
     useEffect(() => {
         const getPost = async () => {
             const res = await fetch(
-                `http://127.0.0.1:8080/api/posts/1/${limit}`
+                `http://127.0.0.1:8080/api/posts/1/${limit}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${props.token}`
+                    },
+                    credentials: 'include',
+                }
             );
             const data = await res.json();
             //console.log(data.posts);
@@ -30,7 +37,6 @@ export default function CheckPoint(props) {
             // console.log(Math.ceil(total/12));
             setItems(data.posts);
         };
-
         getPost();
     }, [limit]);
 
@@ -38,7 +44,14 @@ export default function CheckPoint(props) {
         let status = document.getElementById('status');
         status.classList.remove('hidden');
         const res = await fetch(
-            `http://127.0.0.1:8080/api/posts/${currentPage}/${limit}`
+            `http://127.0.0.1:8080/api/posts/${currentPage}/${limit}`,
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${props.token}`
+                },
+                credentials: 'include',
+            }
         );
         const data = await res.json();
         status.classList.add('hidden');
@@ -85,6 +98,7 @@ export default function CheckPoint(props) {
                         <th className="border-2 border-black">Client</th>
                         <th className="border-2 border-black">Phone</th>
                         <th className="border-2 border-black">Date of Birth</th>
+                        <th className="border-2 border-black">Points</th>
                     </tr>
                 </thead>
                 <tbody className="border-2 border-black">
@@ -93,6 +107,7 @@ export default function CheckPoint(props) {
                         <td className="border-2 border-black text-center" key={row.title}>{row.title}</td>
                         <td className="border-2 border-black text-center" key={row.phone}>{row.phone}</td>
                         <td className="border-2 border-black text-center" key={row.dob}>{row.dob}</td>
+                        <td className="border-2 border-black text-center" key={row.point}>{row.point}</td>
                     </tr>)}
                 </tbody>
             </table>
