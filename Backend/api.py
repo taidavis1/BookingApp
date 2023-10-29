@@ -1,5 +1,6 @@
 from flask import Flask , request , jsonify
 import datetime
+from sqlalchemy import or_
 import os
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail , Message
@@ -77,7 +78,7 @@ class Client(db.Model):
 class CheckIn(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     customer_phone = db.Column(db.String(200) , nullable = False)
-    check_in_time = db.Column(db.DateTime, default=datetime.utcnow)
+    check_in_time = db.Column(db.DateTime)
     check_in_point = db.Column(db.Integer)
     def __init__(self, customer_phone , check_in_point):
         self.customer_phone = customer_phone
@@ -273,23 +274,22 @@ def posts(page=1, per_page=10):
 @app.route("/api/checking" , methods = ['POST'])
 def checking():
     data = request.get_json()
-    # name = data.get('name')
     phone = data.get('phone')
-    customer = db.session.query(Client).join(Booking, Booking.phone == Client.custphone).filter(Booking.phone == phone).first()
+    
+    customer = (
+        db.session.query(Client)
+        .join(Booking, Booking.phone == Client.custphone)
+        .filter(or_(Client.custphone == phone, Booking.phone == phone))
+        .first()
+    )
     if customer:
-        
-        checkin = CheckIn(customer_phone = phone , check_in_point = customer.points)
+        points = customer.points if customer else 0
+        checkin = CheckIn(customer_phone=phone, check_in_point=points)
         db.session.add(checkin)
         db.session.commit()
-        
-        return jsonify({
-            'messages': 'Check in Successful',
-        })
-        
+        return jsonify({'message': 'Check-in Successful'})
     else:
-        return jsonify({
-            'messages': 'Information Does Not Match Our Records'
-        })
-        
+        return jsonify({'messages': 'Information Does Not Match Our Records'})
+
 if __name__ == '__main__':
     app.run(debug = True, host = '0.0.0.0', port=8080)
