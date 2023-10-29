@@ -278,7 +278,7 @@ def checking():
     customer = db.session.query(Client).join(Booking, Booking.phone == Client.custphone).filter(Booking.phone == phone).first()
     if customer:
         
-        checkin = CheckIn(customer_phone = phone , check_in_point = customer.points)
+        checkin = CheckIn(customer_phone = phone , check_in_point = customer.point)
         db.session.add(checkin)
         db.session.commit()
         
