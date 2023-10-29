@@ -283,8 +283,7 @@ def checking():
         .first()
     )
     if customer:
-        points = customer.points if customer else 0
-        checkin = CheckIn(customer_phone=phone, check_in_point=points)
+        checkin = CheckIn(customer_phone = phone , check_in_point = customer.points)
         db.session.add(checkin)
         db.session.commit()
         return jsonify({'message': 'Check-in Successful'})
