@@ -11,7 +11,7 @@ function NavAdmin(){
                     <a className="flex text-black t-underline t-underline-black border-b-yellow-500 " href = "/Admin/View">
                         Appointment
                     </a>
-                    <a className="flex text-black t-underline t-underline-black border-b-yellow-500  transition ease-in-out delay-150 duration-200" href = "/Gallery">
+                    <a className="flex text-black t-underline t-underline-black border-b-yellow-500  transition ease-in-out delay-150 duration-200" href = "/Admin/Checking">
                         Check-In
                     </a>
                 </div>

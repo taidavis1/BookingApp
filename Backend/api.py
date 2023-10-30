@@ -1,6 +1,6 @@
 from flask import Flask , request , jsonify
 import datetime
-from sqlalchemy import or_
+from sqlalchemy import inspect
 import os
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail , Message
@@ -76,16 +76,40 @@ class Client(db.Model):
         self.point = point
         
 class CheckIn(db.Model):
+    
     id = db.Column(db.Integer, primary_key=True)
     customer_phone = db.Column(db.String(200) , nullable = False)
-    check_in_time = db.Column(db.DateTime)
+    check_in_time = db.Column(db.Time , nullable = False)
+    apptime = db.Column(db.String(200) , nullable = False)
     check_in_point = db.Column(db.Integer)
-    def __init__(self, customer_phone , check_in_point):
+    
+    def __init__(self, customer_phone , apptime , check_in_time ,check_in_point):
         self.customer_phone = customer_phone
         self.check_in_point = check_in_point
+        self.apptime = apptime
+        self.check_in_time = check_in_time
+        
+    def to_dict(self):
+        
+        return {
+            'id': self.id,
+            'customer_phone': self.customer_phone,
+            'check_in_time': self.check_in_time.strftime('%H:%M:%S') if self.check_in_time else None,
+            'apptime': self.apptime,
+            'check_in_point': self.check_in_point,
+        }
 
-with app.app_context():   
-    db.create_all()
+with app.app_context():
+    inspector = inspect(db.engine)
+    
+    if not inspector.has_table('booking'):
+        Booking.__table__.create(db.engine)
+
+    if not inspector.has_table('client'):
+        Client.__table__.create(db.engine)
+
+    if not inspector.has_table('check_in'):
+        CheckIn.__table__.create(db.engine)
     
 @app.after_request
 def refresh_expiring_jwts(response):
@@ -271,24 +295,54 @@ def posts(page=1, per_page=10):
         } for p in posts.items]
     })
 
-@app.route("/api/checking" , methods = ['POST'])
+@app.route("/api/checking" , methods = ['POST' , 'GET'])
 def checking():
-    data = request.get_json()
-    phone = data.get('phone')
     
-    customer = (
-        db.session.query(Client)
-        .join(Booking, Booking.phone == Client.custphone)
-        .filter(or_(Client.custphone == phone, Booking.phone == phone))
-        .first()
-    )
-    if customer:
-        checkin = CheckIn(customer_phone = phone , check_in_point = customer.points)
-        db.session.add(checkin)
-        db.session.commit()
-        return jsonify({'message': 'Check-in Successful'})
+    if request.method == 'GET':
+        @jwt_required(locations=['headers'])
+
+        def protected():
+             
+            data = CheckIn.query.order_by(CheckIn.check_in_time).all()
+            list_data = [i.to_dict() for i in data]
+            return jsonify({'data': list_data})
+        
+        return protected()
+            
+    
     else:
-        return jsonify({'messages': 'Information Does Not Match Our Records'})
+    
+        data = request.get_json()
+        phone = data.get('phone')
+        
+        checkbook = Booking.query.filter_by(phone = phone).first()
+        check_client = Client.query.filter_by(custphone = phone).first()
+        points = 0
+        
+        if checkbook:
+            
+            if check_client:
+                points = check_client.points
+            
+            checkin_time = datetime.datetime.now().strftime("%H:%M")
+                
+            checkin = CheckIn(
+                customer_phone=phone, 
+                check_in_point=points , 
+                check_in_time = datetime.datetime.strptime(checkin_time , "%H:%M").time(), 
+                apptime= checkbook.time
+            )
+            
+            db.session.add(checkin)
+            db.session.commit()
+            
+            return jsonify({'message': 'Check-in Successful'})
+        
+        else:
+            
+            return jsonify({'messages': 'Information Does Not Match Our Records'})
+            
+        
 
 if __name__ == '__main__':
     app.run(debug = True, host = '0.0.0.0', port=8080)
