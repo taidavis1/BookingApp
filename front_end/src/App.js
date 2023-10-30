@@ -45,7 +45,7 @@ function App() {
         </>
       ):
       <Routes>
-        <Route path = '/Admin/*' element = {<Index />}>
+        <Route path = '/Admin/*' element = {<Index token={token} removeToken={removeToken} setToken={setToken} />}>
             <Route index element = {<Navigate to ="Login" />} />
             <Route path = 'Login' element = {<Login setToken = {setToken} />}/>
             <Route path = 'View' element = {<View token={token} removeToken={removeToken} setToken={setToken}/>} />

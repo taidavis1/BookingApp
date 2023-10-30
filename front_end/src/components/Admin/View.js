@@ -108,9 +108,9 @@ export default function View(props) {
                     <div className="flex justify-center">
                         <button onClick={(e) => { e.preventDefault(); window.location.href = '/Booking'; }} className="shadow-lg bg-white rounded-full font-bold text-lg text-rose-400 w-[250px] py-3">Add Appointment</button>
                     </div>
-                    <div className="flex justify-center">
+                    {/* <div className="flex justify-center">
                         <button onClick={Logout} className="shadow-lg bg-rose-400 rounded-full font-bold text-lg text-white w-[250px] py-3">Log Out</button>
-                    </div>
+                    </div> */}
         </div>
     );
 }

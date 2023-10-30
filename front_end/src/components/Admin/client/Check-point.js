@@ -16,8 +16,8 @@ export default function CheckPoint(props) {
 
     let limit = 10;
 
-    useEffect(() => {
-        const getPost = async () => {
+    const getPost = async () => {
+        try {
             const res = await fetch(
                 `http://127.0.0.1:8080/api/posts/1/${limit}`,
                 {
@@ -36,7 +36,13 @@ export default function CheckPoint(props) {
             setpageCount(Math.ceil(total / limit));
             // console.log(Math.ceil(total/12));
             setItems(data.posts);
-        };
+        } catch (error) {
+            window.location.href = '/Admin/Login';
+        }
+
+    };
+
+    useEffect(() => {
         getPost();
     }, [limit]);
 
