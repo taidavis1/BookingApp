@@ -114,7 +114,7 @@ def add_checkin():
     
     check_client = Client.query.filter_by(custphone=phone).first()
     
-    if not dob:
+    if dob != "":
         client = Client(custphone=phone, custdob=dob, custname=name, point=1)
     
     if check_client:
