@@ -54,7 +54,7 @@ function Navbar(){
                     </a>
                     <button onClick={(e) => {
                             e.preventDefault();
-                            window.location.href = '/Booking/services';
+                            window.location.href = 'tel:9163718999';
                         }} className="hover:bg-black group cursor-pointer px-4 py-3 border-black border-2 uppercase font-serif tracking-wide">
                         <a className = "group-hover:text-white">Book Now</a>
                     </button>
@@ -69,7 +69,7 @@ function Navbar(){
                         <a onClick={() => setClick(!Click)} className="" href="/Contact">Contact us</a>
                         <button onClick={(e) => {
                             e.preventDefault();
-                            window.location.href = '/Booking/services';
+                            window.location.href = 'tel:9163718999';
                             }} className="hover:bg-black group  transition ease-out duration-200 cursor-pointer px-4 py-3 border-black border-2 uppercase font-serif tracking-wide">
                             <a className = "group-hover:text-white">Book Now</a>
                         </button>

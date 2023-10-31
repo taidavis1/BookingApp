@@ -6,17 +6,13 @@ import Services from './components/Services';
 import Contact from './components/Contact';
 import Gallery from './components/Gallery';
 import FloatBtn from './components/FloatBtn';
-import Booking from './components/Booking/BookingPage';
-import BookingInfo from './components/Booking/BookingInfo';
-import BookingDate from './components/Booking/BookingDate';
-import BookingServices from './components/Booking/BookingServices';
 import Login from './components/Admin/Login';
-import View from './components/Admin/View';
-import CheckPoint from './components/Admin/client/Check-point';
 import Index from './components/Admin/Index';
+import CheckPoint from './components/Admin/client/Check-point';
+import Checkin from './components/Admin/client/CheckIn';
+
 import {Route , Routes , Navigate,  useLocation} from 'react-router-dom';
 import React from 'react';
-import BookingTech from './components/Booking/BookingTech';
 import useToken from './components/useToken';
 function App() {
   const { token, removeToken, setToken } = useToken();
@@ -32,13 +28,7 @@ function App() {
             <Route path='/Services' element = {<Services/>} />
             <Route path='/Gallery' element = {<Gallery />} />
             <Route path='/Contact' element = {<Contact />} />
-            <Route  path = '/Booking/*' element = {<Booking />}>
-              <Route index element={<Navigate to="services" />} />
-              <Route path = 'services' element = {<BookingServices/>} />
-              <Route path = 'datetime' element = {<BookingDate />} />
-              <Route path = 'bookingtechnician' element = {<BookingTech />}/>
-              <Route path = 'info' element = {<BookingInfo />} />
-            </Route>
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
           <FloatBtn />
           <Footer />
@@ -48,8 +38,9 @@ function App() {
         <Route path = '/Admin/*' element = {<Index token={token} removeToken={removeToken} setToken={setToken} />}>
             <Route index element = {<Navigate to ="Login" />} />
             <Route path = 'Login' element = {<Login setToken = {setToken} />}/>
-            <Route path = 'View' element = {<View token={token} removeToken={removeToken} setToken={setToken}/>} />
             <Route path = 'Client' element = {<CheckPoint token={token} removeToken={removeToken} setToken={setToken}/>} />
+            <Route path = 'Checking' element = {<Checkin token={token} removeToken={removeToken} setToken={setToken}/>} />
+
         </Route>
       </Routes>
     }

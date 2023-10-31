@@ -28,14 +28,19 @@ export default function CheckPoint(props) {
                     credentials: 'include',
                 }
             );
-            const data = await res.json();
-            //console.log(data.posts);
-            const totalrec = data.total
-            const total = totalrec;
-            console.log(total);
-            setpageCount(Math.ceil(total / limit));
-            // console.log(Math.ceil(total/12));
-            setItems(data.posts);
+            if (!res.ok){
+                window.location.href = '/Admin/Login';
+            }
+            else{
+                const data = await res.json();
+                //console.log(data.posts);
+                const totalrec = data.total
+                const total = totalrec;
+                console.log(total);
+                setpageCount(Math.ceil(total / limit));
+                // console.log(Math.ceil(total/12));
+                setItems(data.posts);
+            }
         } catch (error) {
             window.location.href = '/Admin/Login';
         }
@@ -72,24 +77,6 @@ export default function CheckPoint(props) {
         const listpage = await fetchPost(currentPage);
 
         setItems(listpage);
-    };
-
-    const Logout = () => {
-        axios.post(`${process.env.REACT_APP_API_URL_LOCAL}/logout`, {}, {
-            withCredentials: true,
-            headers: {
-                "Content-Type": 'application/json',
-                Authorization: `Bearer ${props.token}`
-            },
-        })
-            .then(() => {
-                props.removeToken();
-            })
-            .catch((error) => {
-                console.error(error); // Changed to console.error for logging errors
-            });
-        alert('You Have Been Logout');
-        window.location.href = '/Admin/Login';
     };
 
     return (
@@ -146,6 +133,7 @@ export default function CheckPoint(props) {
                 breakLinkClassName={"page-link"}
                 activeClassName="bg-blue text-white font-bold"
             />
+            
         </div>
     );
 }

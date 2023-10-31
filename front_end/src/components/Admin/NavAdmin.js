@@ -47,20 +47,16 @@ function NavAdmin(props) {
     }, []); 
     return (
         <div className="w-full font-sans">
-            <nav className="bg-white p-2 px-6 shadow-md w-full fixed top-0 left-0 right-0 z-10 grid grid-cols-3">
+            <nav className="bg-white flex justify-between p-2 lg:justify-around  shadow-md w-full fixed top-0 left-0 right-0 z-10 ">
                 <div id="logo">
                     <img className="w-14 md:w-24" src="/static/media/Logo.13e6b113ae9c0735e71f.jpg" />
                 </div>
-                <div className="lg:flex flex text-md items-center space-x-8 font-new-font text-lg uppercase hidden sm:block">
+                <div className="!flex text-md items-center space-x-8 font-new-font text-lg uppercase sm:block">
                     <a className="flex items-center gap-2 text-black t-underline t-underline-black border-b-yellow-500 transition ease-in-out delay-150 duration-200 font-mono" href="/Admin/Client">
                         <FontAwesomeIcon icon={faList} />
                         Customer
                     </a>
-                    <a className="flex items-center gap-2 text-black t-underline t-underline-black border-b-yellow-500 font-mono" href="/Admin/View">
-                        <FontAwesomeIcon icon={faCalendar} />
-                        Appointment
-                    </a>
-                    <a className="flex items-center gap-2 text-black t-underline t-underline-black border-b-yellow-500 transition ease-in-out delay-150 duration-200 font-mono" href="/Gallery">
+                    <a className="flex items-center gap-2 text-black t-underline t-underline-black border-b-yellow-500 transition ease-in-out delay-150 duration-200 font-mono" href="/Admin/Checking">
                         <FontAwesomeIcon icon={faCheckDouble} />
                         Check-In
                     </a>
@@ -78,17 +74,11 @@ function NavAdmin(props) {
                             <div className="relative">
                                 <div id="dropDownList" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-32 dark:bg-gray-700 absolute mr-6">
                                     <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-                                        <li>
-                                            <a href="/Admin/View" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
-                                        </li>
                                         <li className="block sm:hidden">
                                             <a href="/Admin/Client" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Customer</a>
                                         </li>
                                         <li className="block sm:hidden">
-                                            <a href="/Admin/View" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Appointment</a>
-                                        </li>
-                                        <li className="block sm:hidden">
-                                            <a href="/Gallery" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Check-In</a>
+                                            <a href="/Checkin" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Check-In</a>
                                         </li>
                                         <li className="cursor-pointer" onClick={logout}>
                                             <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign out</span>

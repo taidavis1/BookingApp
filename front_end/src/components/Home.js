@@ -23,7 +23,7 @@ function Home(){
                         </div>
                         <button onClick={(e) => {
                             e.preventDefault();
-                            window.location.href = '/Booking/services';
+                            window.location.href = 'tel:9163718999';
                         }} className="hover:bg-black md:text-lg text-sm py-2 px-1 group cursor-pointer md:px-12 border-black border-2 uppercase font-serif md:tracking-wide">
                             <a className = "group-hover:text-white ">Book Appointment</a>
                         </button>
