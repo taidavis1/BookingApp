@@ -98,8 +98,7 @@ def checking():
         return add_checkin()
 
 def get_checkin():
-    
-    @jwt_required(locations=['headers'])
+    # @jwt_required(locations=['headers'])
     def protected():
         data = CheckIn.query.order_by(CheckIn.check_in_time).all()
         list_data = [i.to_dict() for i in data]
@@ -116,8 +115,7 @@ def add_checkin():
     
     check_client = Client.query.filter_by(custphone=phone).first()
     
-    if not dob:
-        
+    if dob != "":
         client = Client(custphone=phone, custdob=dob, custname=name, point=1)
     
     if check_client:

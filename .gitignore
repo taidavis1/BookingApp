@@ -3,3 +3,9 @@ thuy-keys.pem
 /front_end/node_modules
 */venv/
 /Backend/venv
+/Backend/__pycache__/
+/Backend/Components/__pycache__/
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
