@@ -97,7 +97,7 @@ def checking():
         return add_checkin()
 
 def get_checkin():
-    @jwt_required(locations=['headers'])
+    # @jwt_required(locations=['headers'])
     def protected():
         data = CheckIn.query.order_by(CheckIn.check_in_time).all()
         list_data = [i.to_dict() for i in data]
