@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAlignLeft, faAngleLeft, faAngleRight, faArrowLeftLong, faPhone } from "@fortawesome/free-solid-svg-icons";
+import { faAlignLeft, faAngleLeft, faAngleRight, faArrowLeftLong, faCakeCandles, faPhone } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import ReactPaginate from "react-paginate";
 
@@ -80,12 +80,12 @@ export default function CheckPoint(props) {
     return (
         <div className="flex flex-col px-5 py-8 space-y-6 bg-gray-100 min-h-screen">
             <div className="text-start justify-start ml-6">
-                <span className="text-blue text-6xl" style={{fontFamily : 'Tangerine'}}>This is checking point page</span>
+                <span className="text-yellow-500 text-6xl" style={{fontFamily : 'Tangerine'}}>This is checking point page</span>
             </div>
-            <div className="p-4 bg-white" id="table-client">
-                <table className="table-auto w-full overflow-auto" style={{marginTop: '50px'}}>
+            <div className="p-4 bg-white rounded-lg overflow-auto" id="table-client">
+                <table className="table-auto w-[500px] sm:w-full" style={{marginTop: '50px'}}>
                     <thead>
-                        <tr className="border-b-2 bg-gray-100 h-12 overflow-auto" style={{fontFamily : 'Roboto'}}>
+                        <tr className="border-b-2 bg-gray-100 h-12" style={{fontFamily : 'Roboto'}}>
                             <th className="border-b-1 border-gray-200">ID</th>
                             <th className="border-b-1 border-gray-200">Client</th>
                             <th className="border-b-1 border-gray-200">Phone</th>
@@ -94,14 +94,17 @@ export default function CheckPoint(props) {
                         </tr>
                     </thead>
                     <tbody className="">
-                        {items.map((row, index) => <tr className="border-b-2 border-gray-200 overflow-auto h-10" key={index} style={{fontFamily: 'Roboto Flex'}}>
+                        {items.map((row, index) => <tr className="border-b-2 border-gray-200 h-10" key={index} style={{fontFamily: 'Roboto Flex'}}>
                             <td className="text-center" >{row.id}</td>
                             <td className="text-center" >{row.title}</td>
                             <td className="text-center space-x-1" >
                                 <FontAwesomeIcon icon={faPhone} />
                                 <span>{row.phone}</span>
                             </td>
-                            <td className="text-center" >{row.dob}</td>
+                            <td className="text-center space-x-1" >
+                                <FontAwesomeIcon icon={faCakeCandles} />
+                                <span>{row.dob}</span>
+                            </td>
                             <td className="text-center" >{row.point}</td>
                         </tr>)}
                     </tbody>
@@ -118,9 +121,9 @@ export default function CheckPoint(props) {
                     containerClassName="pagination flex items-center justify-center mt-8 mb-4"
                     pageClassName="block border-1 border-solid border-lightGray hover:bg-lightGray w-10 h-10 flex items-center justify-center rounded-md"
                     pageLinkClassName={"page-link"}
-                    previousClassName={"page-item text-center border-2 p-2 bg-gray-200 hover:bg-gray-300 w-12"}
+                    previousClassName={"page-item text-center border-2 p-2 bg-gray-200 hover:bg-gray-300 w-12 rounded-lg"}
                     previousLinkClassName={"page-link"}
-                    nextClassName={"page-item text-center border-2 p-2 bg-gray-200 hover:bg-gray-300 w-12"}
+                    nextClassName={"page-item text-center border-2 p-2 bg-gray-200 hover:bg-gray-300 w-12 rounded-lg"}
                     nextLinkClassName={"page-link"}
                     breakClassName={"page-item"}
                     breakLinkClassName={"page-link"}

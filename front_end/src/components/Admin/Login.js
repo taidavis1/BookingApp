@@ -24,7 +24,7 @@ export default function Login(props){
                 alert ("Login Success!");
                 setUserName('');
                 setPass('');
-                window.location.href = "/Admin/View";
+                window.location.href = "/Admin/Checking";
             }
             else{
                 alert("Wrong Credetials");

@@ -124,12 +124,12 @@ def add_checkin():
         
         check_client.point = points
     
-    checkin_time = datetime.now().strftime("%H:%M")
+    checkin_time = datetime.datetime.now().strftime("%H:%M")
     checkin = CheckIn(
         customer_phone=phone,
         customer_name=name,
         dob=dob,
-        check_in_time=datetime.strptime(checkin_time, "%H:%M").time(),
+        check_in_time=datetime.datetime.strptime(checkin_time, "%H:%M").time(),
         check_in_point=points
     )
     

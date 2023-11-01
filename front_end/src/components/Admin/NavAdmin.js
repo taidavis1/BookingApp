@@ -51,7 +51,7 @@ function NavAdmin(props) {
                 <div id="logo">
                     <img className="w-14 md:w-24" src="/static/media/Logo.13e6b113ae9c0735e71f.jpg" />
                 </div>
-                <div className="!flex text-md items-center space-x-8 font-new-font text-lg uppercase sm:block">
+                <div className="flex text-md items-center space-x-8 font-new-font text-lg uppercase hidden sm:flex">
                     <a className="flex items-center gap-2 text-black t-underline t-underline-black border-b-yellow-500 transition ease-in-out delay-150 duration-200 font-mono" href="/Admin/Client">
                         <FontAwesomeIcon icon={faList} />
                         Customer

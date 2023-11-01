@@ -52,10 +52,13 @@ export default function Checkin(props) {
         <div className="flex flex-col p-6 bg-white min-h-screen">
             <div className="overflow-x-auto sm:-mx-6 lg:-mx-8 mb-4">
                 <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                    <div className="text-start justify-start ml-6">
+                        <span className="text-yellow-500 text-6xl" style={{ fontFamily: 'Tangerine' }}>Check in list</span>
+                    </div>
                     <div className="overflow-hidden">
                         <table className="min-w-full text-left">
                             <thead className="bg-gray-100 border-b-2 border-b-black font-medium">
-                                <tr className="text-md" style={{fontFamily : 'Roboto'}}>
+                                <tr className="text-md" style={{ fontFamily: 'Roboto' }}>
                                     <th scope="col" className="px-6 py-4">Id</th>
                                     <th scope="col" className="px-6 py-4">Name</th>
                                     <th scope="col" className="px-6 py-4">Customer Phone</th>
@@ -64,11 +67,12 @@ export default function Checkin(props) {
                                         <span className="ml-2">Check in Time</span>
                                     </th>
                                     <th scope="col" className="px-6 py-4">Point</th>
+                                    <th scope="col" className="px-6 py-4"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {data.map((d, index) => (
-                                    <tr className="border-b-2 border-solid border-b-black text-lg" key={index}>
+                                    <tr className="border-b-2 border-solid border-b-black text-lg" key={index} style={{fontFamily: 'Roboto'}}>
                                         {/* Updated class to className and other styling issues */}
                                         <td className="whitespace-nowrap px-6 py-4 font-medium">{d.id}</td>
                                         <td className="whitespace-nowrap px-6 py-4">{d.name}</td>
