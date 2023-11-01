@@ -91,12 +91,14 @@ def posts(page=1, per_page=10):
 
 @api.route("/api/checking", methods=['GET', 'POST'])
 def checking():
+    
     if request.method == 'GET':
         return get_checkin()
     else:
         return add_checkin()
 
 def get_checkin():
+    
     @jwt_required(locations=['headers'])
     def protected():
         data = CheckIn.query.order_by(CheckIn.check_in_time).all()
@@ -115,10 +117,14 @@ def add_checkin():
     check_client = Client.query.filter_by(custphone=phone).first()
     
     if not dob:
+        
         client = Client(custphone=phone, custdob=dob, custname=name, point=1)
     
     if check_client:
+        
         points = check_client.point + 1
+        
+        check_client.point = points
     
     checkin_time = datetime.now().strftime("%H:%M")
     checkin = CheckIn(
