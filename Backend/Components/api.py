@@ -40,7 +40,6 @@ def login():
     data = request.get_json()
     username = data.get('username')
     password = data.get('password')
-    print(password)
     if username == admin['username'] and admin['password'] == password:
         access_token = create_access_token(identity=username)
         return jsonify(access_token=access_token)
@@ -70,7 +69,6 @@ def delete_data(name , id):
 @jwt_required(locations=['headers'])
 def posts(page=1, per_page=10):
     total = Client.query.count()
-    print(total)
     posts = Client.query.order_by(Client.custname)  
     posts = posts.paginate(page=page, per_page=per_page)
     return jsonify({
@@ -115,28 +113,44 @@ def add_checkin():
     
     check_client = Client.query.filter_by(custphone=phone).first()
     
+    check_checking = CheckIn.query.filter_by(customer_phone = phone).first()
+    
+    checkin_time = datetime.datetime.now().strftime("%H:%M")
+    
+    points = None
+
+    
     if dob != "":
         client = Client(custphone=phone, custdob=dob, custname=name, point=1)
     
-    if check_client:
+    if check_client and check_checking:
         
         points = check_client.point + 1
         
         check_client.point = points
-    
-    checkin_time = datetime.datetime.now().strftime("%H:%M")
-    checkin = CheckIn(
+        
+        check_checking.check_in_point = points
+        
+        check_checking.check_in_time = datetime.datetime.strptime(checkin_time, "%H:%M").time()
+        
+    elif check_checking:
+        
+        check_checking.check_in_time = datetime.datetime.strptime(checkin_time, "%H:%M").time()
+            
+    else:
+        
+        checkin = CheckIn(
         customer_phone=phone,
         customer_name=name,
         dob=dob,
         check_in_time=datetime.datetime.strptime(checkin_time, "%H:%M").time(),
         check_in_point=points
     )
+        db.session.add(checkin)
+        
     
     if client is not None:
-        db.session.add_all([checkin, client])
-    else:
-        db.session.add(checkin)
+        db.session.add(client)
     
     db.session.commit()
     
