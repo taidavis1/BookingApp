@@ -118,8 +118,6 @@ def add_checkin():
     name = data.get('name')
     dob = data.get('dob')
     
-    dob = datetime.datetime.strptime(dob , "%m/%d/%Y").strftime("%m/%d/%Y")
-    
     client = None
     
     check_client = Client.query.filter_by(custphone=phone).first()
@@ -128,13 +126,15 @@ def add_checkin():
     
     checkin_time = datetime.datetime.now().strftime("%H:%M")
     
-    points = 1
+    points = 0
 
     
     if dob != "":
-                
-        client = Client(custphone=phone, custdob=dob, custname=name, point=1)
-    
+        
+        dob = datetime.datetime.strptime(dob , "%m/%d/%Y").strftime("%m/%d/%Y")
+        points += 1
+        client = Client(custphone=phone, custdob=dob, custname=name, point=points)
+        
     if check_client and check_checking:
         
         points = check_client.point + 1
@@ -150,7 +150,6 @@ def add_checkin():
         check_checking.check_in_time = datetime.datetime.strptime(checkin_time, "%H:%M").time()
             
     else:
-        
         checkin = CheckIn(
         customer_phone=phone,
         customer_name=name,
