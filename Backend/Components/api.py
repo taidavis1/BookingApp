@@ -47,6 +47,7 @@ def login():
         return jsonify({
             'message': 'Not Match'
         })
+        
 @api.route("/api/logout" , methods = ['POST'])
 def logout():
     response = jsonify({"msg": "logout successful"})
@@ -67,10 +68,15 @@ def delete_data(name , id):
     
 @api.route('/api/posts/<int:page>/<int:per_page>', methods=['GET'])
 @jwt_required(locations=['headers'])
+
 def posts(page=1, per_page=10):
+    
     total = Client.query.count()
-    posts = Client.query.order_by(Client.custname)  
+    
+    posts = Client.query.order_by(Client.custname)
+      
     posts = posts.paginate(page=page, per_page=per_page)
+    
     return jsonify({
         'total': total,
         'page': page,
@@ -100,14 +106,19 @@ def get_checkin():
     def protected():
         data = CheckIn.query.order_by(CheckIn.check_in_time).all()
         list_data = [i.to_dict() for i in data]
-        return jsonify({'data': list_data})
+        return jsonify(
+            {'data': list_data}
+        )
     return protected()
 
 def add_checkin():
+    
     data = request.get_json()
     phone = data.get('phone')
     name = data.get('name')
     dob = data.get('dob')
+    
+    dob = datetime.datetime.strptime(dob , "%m/%d/%Y").strftime("%m/%d/%Y")
     
     client = None
     
@@ -117,10 +128,11 @@ def add_checkin():
     
     checkin_time = datetime.datetime.now().strftime("%H:%M")
     
-    points = None
+    points = 1
 
     
     if dob != "":
+                
         client = Client(custphone=phone, custdob=dob, custname=name, point=1)
     
     if check_client and check_checking:
@@ -149,9 +161,10 @@ def add_checkin():
         db.session.add(checkin)
         
     
-    if client is not None:
+    if client is not None and not check_client:
+        
         db.session.add(client)
     
     db.session.commit()
     
-    return jsonify({'message': 'Check-in Successful'})
+    return jsonify({'messages': 'Check-in Successful'})

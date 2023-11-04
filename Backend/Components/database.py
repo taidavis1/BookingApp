@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
+import sqlalchemy
 from sqlalchemy import inspect
-import json
-import pymysql
+from pymysql.err import OperationalError
 
 
 db = SQLAlchemy()
@@ -13,7 +13,7 @@ class CheckIn(db.Model):
     customer_phone = db.Column(db.String(200) , nullable = False)
     customer_name  = db.Column(db.String(200) , nullable = False)
     check_in_time = db.Column(db.Time , nullable = False)
-    dob = db.Column(db.String(200))
+    dob = db.Column(db.String(200) , nullable = True)
     check_in_point = db.Column(db.Integer)
     
     def __init__(self, customer_phone , customer_name ,  dob , check_in_time ,check_in_point):
@@ -47,17 +47,4 @@ class Client(db.Model):
         self.custphone = custphone
         self.custdob = custdob
         self.point = point
-
-
-def int__app(app):
-    db.__init__(app)
-    
-def create_all():
-    
-    inspector = inspect(db.engine)
-
-    if not inspector.has_table('client'):
-        Client.__table__.create(db.engine)
-
-    if not inspector.has_table('check_in'):
-        CheckIn.__table__.create(db.engine)
+            

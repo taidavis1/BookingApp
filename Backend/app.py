@@ -13,12 +13,15 @@ app.config.from_object(Configuration)
 
 db.init_app(app)
 
+with app.app_context():
+    
+    if OperationalError and sqlalchemy.exc.OperationalError:
+        pass
+    
+    db.create_all()
+
 init_jwt(app)
 
-
-with app.app_context():
-    db.create_all()
-    
 
 CORS(app , supports_credentials=True)
     
