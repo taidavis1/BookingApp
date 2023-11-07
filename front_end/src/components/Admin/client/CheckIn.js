@@ -2,31 +2,65 @@ import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faTrash } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import io from "socket.io-client";
 
 export default function Checkin(props) {
+
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        generateData();
-    }, []);
-
-    const generateData = () => {
-        axios.get(`${process.env.REACT_APP_API_URL_LOCAL}/checking`, {
+        
+        const socket = io('http://localhost:8080/api/admin', {
             withCredentials: true,
-            headers: {
+            cors: {
+                origin: "http://localhost:3000/",
+            },
+            extraHeaders:{
                 "Content-Type": 'application/json',
                 Authorization: `Bearer ${props.token}`
             },
-        })
-            .then((resp) => {
-                const res = resp.data;
-                res.access_token && props.setToken(res.access_token);
-                setData(res.data);
-            })
-            .catch((error) => {
-                window.location.href = '/Admin/Login';
-            });
-    };
+    
+        });
+
+        socket.connect();
+
+        socket.on('admin_check', (checkinData) => {
+
+            console.log(checkinData.data);
+
+            setData(checkinData.data);
+
+        });
+
+        socket.emit('get_admin_checkin' , props.token);
+
+        return () => {
+
+            socket.off('admin_check');
+
+            socket.disconnect();
+
+        };
+
+    }, [props.token]);
+
+    // const generateData = () => {
+    //     axios.get(`${process.env.REACT_APP_API_URL_LOCAL}/checking`, {
+    //         withCredentials: true,
+    //         headers: {
+    //             "Content-Type": 'application/json',
+    //             Authorization: `Bearer ${props.token}`
+    //         },
+    //     })
+    //         .then((resp) => {
+    //             const res = resp.data;
+    //             res.access_token && props.setToken(res.access_token);
+    //             setData(res.data);
+    //         })
+    //         .catch((error) => {
+    //             window.location.href = '/Admin/Login';
+    //         });
+    // };
 
     const DeleteBtn = (name, id) => {
         const isConfirmed = window.confirm('Are you sure you want to delete this item?');

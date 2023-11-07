@@ -3,11 +3,14 @@ import datetime
 from datetime import timedelta , timezone
 from flask_jwt_extended import create_access_token, JWTManager , jwt_required, get_jwt, get_jwt_identity, unset_jwt_cookies
 from Components.database import *
+from flask_socketio import SocketIO , emit
 import json
 
 api  = Blueprint('api' , __name__ ,)
 
 jwt = JWTManager()
+
+socketio = SocketIO(cors_allowed_origins='*')
 
 admin = {
     'username':'thuy123',
@@ -16,6 +19,7 @@ admin = {
 
 def init_jwt(app):
     jwt.__init__(app)
+    socketio.init_app(app)
 
     
 @api.after_request
@@ -111,9 +115,18 @@ def get_checkin():
         )
     return protected()
 
-def add_checkin():
-    
-    data = request.get_json()
+@socketio.on('get_admin_checkin', namespace= "/api/admin")
+@jwt_required(locations=['headers'])
+def get_checkin_admin(token):
+    if token:
+        data = CheckIn.query.order_by(CheckIn.check_in_time).all()
+        
+        list_data = [i.to_dict() for i in data]
+                
+        emit('admin_check' , {'data' : list_data})
+
+@socketio.on('check_in' , namespace="/api/checking")
+def add_checkin(data):
     phone = data.get('phone')
     name = data.get('name')
     dob = data.get('dob')
@@ -166,4 +179,6 @@ def add_checkin():
     
     db.session.commit()
     
-    return jsonify({'messages': 'Check-in Successful'})
+    emit("check_in" , args= {'message': 'Check-in Successful'})
+    
+    # return jsonify({'messages': 'Check-in Successful'})

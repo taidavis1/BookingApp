@@ -1,6 +1,8 @@
 FROM python:3.8
 WORKDIR /backend
 
+# set time for docker 
+
 ENV TZ=America/Los_Angeles
 RUN apt-get update && \
     apt-get install -y tzdata && \
@@ -14,5 +16,4 @@ EXPOSE 8080
 
 COPY . .
 
-
-CMD ["gunicorn", "-k", "eventlet", "-w", "1", "wsgi:app" , "--bind", "0.0.0.0:8080"]
+CMD ["gunicorn", "wsgi:app", "-w 2", "-b 0.0.0.0:8080", "-t 30"]
