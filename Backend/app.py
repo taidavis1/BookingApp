@@ -3,6 +3,7 @@ from Components.routes import *
 from Components.api import *
 from Components.database import *
 from Components.config import *
+from Components.socket import *
 from flask_cors import CORS
 
 
@@ -22,12 +23,16 @@ with app.app_context():
 
 init_jwt(app)
 
+init_sok(app)
+
 
 CORS(app , supports_credentials=True)
     
 app.register_blueprint(routes)
 
 app.register_blueprint(api)
+
+app.register_blueprint(socket)
 
 
 ##################################################################

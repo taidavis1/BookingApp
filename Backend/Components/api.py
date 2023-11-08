@@ -3,25 +3,20 @@ import datetime
 from datetime import timedelta , timezone
 from flask_jwt_extended import create_access_token, JWTManager , jwt_required, get_jwt, get_jwt_identity, unset_jwt_cookies
 from Components.database import *
-from flask_socketio import SocketIO , emit
 import json
 
 api  = Blueprint('api' , __name__ ,)
-
-jwt = JWTManager()
-
-socketio = SocketIO(cors_allowed_origins='*')
 
 admin = {
     'username':'thuy123',
     'password':'123'
 }
 
-def init_jwt(app):
-    jwt.__init__(app)
-    socketio.init_app(app)
+jwt = JWTManager()
 
-    
+def init_jwt(app):
+    jwt.init_app(app)
+
 @api.after_request
 def refresh_expiring_jwts(response):
     try:
@@ -96,89 +91,3 @@ def posts(page=1, per_page=10):
             'point': p.point,
         } for p in posts.items]
     }), 201
-
-@api.route("/api/checking", methods=['GET', 'POST'])
-def checking():
-    
-    if request.method == 'GET':
-        return get_checkin()
-    else:
-        return add_checkin()
-
-def get_checkin():
-    # @jwt_required(locations=['headers'])
-    def protected():
-        data = CheckIn.query.order_by(CheckIn.check_in_time).all()
-        list_data = [i.to_dict() for i in data]
-        return jsonify(
-            {'data': list_data}
-        )
-    return protected()
-
-@socketio.on('get_admin_checkin', namespace= "/api/admin")
-@jwt_required(locations=['headers'])
-def get_checkin_admin(token):
-    if token:
-        data = CheckIn.query.order_by(CheckIn.check_in_time).all()
-        
-        list_data = [i.to_dict() for i in data]
-                
-        emit('admin_check' , {'data' : list_data})
-
-@socketio.on('check_in' , namespace="/api/checking")
-def add_checkin(data):
-    phone = data.get('phone')
-    name = data.get('name')
-    dob = data.get('dob')
-    
-    client = None
-    
-    check_client = Client.query.filter_by(custphone=phone).first()
-    
-    check_checking = CheckIn.query.filter_by(customer_phone = phone).first()
-    
-    checkin_time = datetime.datetime.now().strftime("%H:%M")
-    
-    points = 0
-
-    
-    if dob != "":
-        
-        dob = datetime.datetime.strptime(dob , "%m/%d/%Y").strftime("%m/%d/%Y")
-        points += 1
-        client = Client(custphone=phone, custdob=dob, custname=name, point=points)
-        
-    if check_client and check_checking:
-        
-        points = check_client.point + 1
-        
-        check_client.point = points
-        
-        check_checking.check_in_point = points
-        
-        check_checking.check_in_time = datetime.datetime.strptime(checkin_time, "%H:%M").time()
-        
-    elif check_checking:
-        
-        check_checking.check_in_time = datetime.datetime.strptime(checkin_time, "%H:%M").time()
-            
-    else:
-        checkin = CheckIn(
-        customer_phone=phone,
-        customer_name=name,
-        dob=dob,
-        check_in_time=datetime.datetime.strptime(checkin_time, "%H:%M").time(),
-        check_in_point=points
-    )
-        db.session.add(checkin)
-        
-    
-    if client is not None and not check_client:
-        
-        db.session.add(client)
-    
-    db.session.commit()
-    
-    emit("check_in" , args= {'message': 'Check-in Successful'})
-    
-    # return jsonify({'messages': 'Check-in Successful'})

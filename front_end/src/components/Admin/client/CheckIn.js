@@ -25,14 +25,9 @@ export default function Checkin(props) {
         socket.connect();
 
         socket.on('admin_check', (checkinData) => {
-
-            console.log(checkinData.data);
-
             setData(checkinData.data);
-
         });
 
-        socket.emit('get_admin_checkin' , props.token);
 
         return () => {
 
