@@ -9,3 +9,5 @@ __pycache__/
 *.py[cod]
 *.pyc
 *.pyo
+/Backend/aws_deploy/
+/Backend/Components/config.py

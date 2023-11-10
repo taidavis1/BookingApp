@@ -26,7 +26,7 @@ init_jwt(app)
 init_sok(app)
 
 
-CORS(app , supports_credentials=True)
+CORS(app , supports_credentials=True , origins=["https://luxurynailwestsac.com"])
     
 app.register_blueprint(routes)
 
@@ -39,4 +39,4 @@ app.register_blueprint(socket)
 
 if __name__ == '__main__':
     
-    socketio.run(app , debug = True, host = '0.0.0.0', port=8080)
+    socketio.run(app ,  port=8080)
