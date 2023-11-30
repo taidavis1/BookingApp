@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "SalonBooking",
-    "slug": "SalonBooking",
+    "name": "tanya app",
+    "slug": "tanya-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,7 +15,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.taidavis1.tanyaapp"
     },
     "android": {
       "adaptiveIcon": {
@@ -25,6 +26,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "701a8fbf-a454-4126-9cd1-4f01844a5e95"
+      }
     }
   }
 }
